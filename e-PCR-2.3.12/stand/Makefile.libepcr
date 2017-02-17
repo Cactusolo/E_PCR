@@ -1,0 +1,141 @@
+## $Id: Makefile.libepcr,v 1.7 2007/07/05 16:06:04 rotmistr Exp $
+########################################################################
+##
+##                            PUBLIC DOMAIN NOTICE
+##               National Center for Biotechnology Information
+##
+##  This software/database is a "United States Government Work" under the
+##  terms of the United States Copyright Act.  It was written as part of
+##  the author's official duties as a United States Government employee and
+##  thus cannot be copyrighted.  This software/database is freely available
+##  to the public for use. The National Library of Medicine and the U.S.
+##  Government have not placed any restriction on its use or reproduction.
+##
+##  Although all reasonable efforts have been taken to ensure the accuracy
+##  and reliability of the software and data, the NLM and the U.S.
+##  Government do not and cannot warrant the performance or results that
+##  may be obtained by using this software or data. The NLM and the U.S.
+##  Government disclaim all warranties, express or implied, including
+##  warranties of performance, merchantability or fitness for any particular
+##  purpose.
+##
+##  Please cite the author in any work or product based on this material.
+##
+########################################################################
+
+srcdir = .
+include $(srcdir)/stand/config.mk
+
+SRC_FILES = \
+	faread \
+	fast_seqio_read \
+	fast_seqio_write \
+	hashset \
+	mmap \
+	align \
+	stsmatch_i \
+	stsmatch_m \
+	stsfilter \
+	stsmatch \
+	fahash_create \
+	fahash_create1 \
+	fahash_create2 \
+	fahash_lookup
+SRC = $(SRC_FILES:%=$(srcdir)/%.cpp)
+OBJ = $(SRC_FILES:%=$(objdir)/%.o)
+HDR = defaults.h build_cfg.h \
+	bin-io.hpp \
+	strref.hpp \
+	faread.hpp \
+	fast_seqio.hpp \
+	hashset.hpp \
+	minilcs.hpp \
+	align.hpp \
+	sts_i.hpp \
+	stsmatch_i.hpp \
+	stsmatch_m.hpp \
+	stsmatch.hpp \
+	fahash.hpp \
+	sts.hpp
+
+LIBNAME = epcr
+TARGET = $(tgtdir)/libepcr.a
+
+target: $(TARGET)
+
+install:
+
+install-lib:
+	cp $(TARGET) $(LIBDIR)
+	mkdir $(INCDIR)/$(LIBNAME)
+	cp $(HDR) $(INCDIR)/$(LIBNAME)
+
+$(tgtdir)/libepcr.a: $(OBJ)
+	-rm -f $@
+	ar cru $@ $(OBJ)
+	ranlib $@
+
+$(objdir)/fahash_lookup.o: 	$(srcdir)/fahash_lookup.cpp
+$(objdir)/fahash_create.o: 	$(srcdir)/fahash_create.cpp
+$(objdir)/fahash_create1.o: 	$(srcdir)/fahash_create1.cpp
+$(objdir)/fahash_create2.o: 	$(srcdir)/fahash_create2.cpp
+$(objdir)/faread.o: 		$(srcdir)/faread.cpp
+$(objdir)/fast_seqio_read.o:	$(srcdir)/fast_seqio_read.cpp
+$(objdir)/fast_seqio_write.o:	$(srcdir)/fast_seqio_write.cpp
+$(objdir)/hashset.o:		$(srcdir)/hashset.cpp
+$(objdir)/mmap.o:		$(srcdir)/mmap.cpp
+$(objdir)/align.o:		$(srcdir)/align.cpp
+$(objdir)/stsmatch_i.o:		$(srcdir)/stsmatch_i.cpp
+$(objdir)/stsmatch_m.o:		$(srcdir)/stsmatch_m.cpp
+$(objdir)/stsfilter.o:		$(srcdir)/stsfilter.cpp
+$(objdir)/stsmatch.o:		$(srcdir)/stsmatch.cpp
+
+depend: 
+	$(CXX) $(CXXFLAGS) -M $(SRC) | $(FIXCMD) > $(tgtdir)/libepcr_depend.mk
+
+-include $(tgtdir)/libepcr_depend.mk
+
+########################################################################
+## $Log: Makefile.libepcr,v $
+## Revision 1.7  2007/07/05 16:06:04  rotmistr
+## Made things compileable by MS Visual C++ 8.0
+##
+## Revision 1.6  2004/06/03 23:37:29  rotmistr
+## New aligner added.
+##
+## Revision 1.5  2004/05/27 20:36:04  rotmistr
+## Version 2.1.0 with appropriate changes (see Changes) is ready for tests.
+##
+## Revision 1.4  2004/03/30 21:06:58  rotmistr
+## Fixes for setting default STS size range.
+##
+## Revision 1.3  2004/02/04 21:23:46  rotmistr
+## - gcc-3.3.2 compatible
+## - better postfiltering for reverse-e-PCR for discontiguos words
+## - cgi added, that supports:
+##  -- contig to chromosome mapping
+##  -- simple mapviewer links
+##  -- unists links
+##  -- discontiguos words
+##
+## Revision 1.2  2004/01/28 23:27:09  rotmistr
+## "Best of overlapping" hit selection postprocessor added.
+##
+## Revision 1.1.1.1  2003/12/23 18:17:28  rotmistr
+## Package that includes e-PCR, reverse e-PCR, and sequence data preparation
+## program for reverse e-PCR looks ready
+##
+## Revision 1.5  2003/12/01 12:29:36  rotmistr
+## Reverse PCR wordhash builder in progress
+##
+## Revision 1.4  2003/11/21 23:26:36  rotmistr
+## Almost compilable
+##
+## Revision 1.3  2003/11/20 18:27:32  rotmistr
+## Sample files updated
+## Program does not crush
+##
+## Revision 1.2  2003/11/20 02:12:28  rotmistr
+## Fixed id, log tags and copyright notice
+##
+########################################################################

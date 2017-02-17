@@ -1,0 +1,135 @@
+version		 2.3.12
+affected:	 few *.cpp files
+description:
+	- Added include of cstdio to make it compilable with gcc 4.4 (thanks to Ubuntu and 
+	  Debian-med teams)
+
+version		 2.3.11
+affected:    stsmatch_i.?pp
+description: 
+	- When parsing commandline if -d was used before -w or -f default size was reset to 
+	  program's default
+
+version		 2.3.10
+affected:	 includes in a few files
+description:
+	- Applied user-provided patch to add includes for gcc-4.3 compatibility
+
+version		 2.3.9
+affected:    fahash_lookup.cpp
+description: 
+	- Fixed a bug leading to false negatives when run without optimization
+
+version		 2.3.8
+affected:	 e-PCR_main.cpp build_cfg.h 
+added:		 ncbi/Makefile ncbi/Makefile.INCLUDE
+description:
+	- Added possibility to compile with NCBI C++ toolkit and read blastdb instead of fasta
+
+version		 2.3.7
+affected:	 build_cfg.h fast_seqio*.?pp fahash*.?pp stsmatch_m.cpp
+description:
+	- Fixed reverse e-pcr code to work on Linux 64 bit architecture
+
+version      2.3.6
+added:		 stand/Makefile.vc8
+affected:	 mswin.h *_main.cpp
+description:
+	- Fixed some warnings and made it compileable by MS Visual C++ 8.0
+
+affected:	 
+version		 2.3.5
+affected:	 fahash_create2.cpp
+description:
+	- Made more details to report seek failure 
+
+version		 2.3.4
+affected:    re-PCR_main.cpp, fahash_main.cpp
+description: 
+	- Minor changes to progress reporting
+
+version      2.3.3
+affected:    e-PCR_main.cpp (forward e-PCR) output
+description:
+        - Attention: Hit positions do not include floppy tails anymore
+        - TODO: same with reverse e-PCR
+		- Fixed typo in BUILD.*
+
+version      2.3.2
+affected:    stsmatch_i.?pp, e-PCR_main.cpp (forward e-PCR)
+description:
+        - Progress indication is more detailed and controlled
+
+version      2.3.1
+affected:    sts_i.hpp, stsmatch_m.?pp (forward e-PCR)
+description:
+	- Bugfix: some hits were lost with large margin
+	- Bugfix: re-PCR for win32 now works again
+	- Can read primers from file
+
+version      2.3.0
+affected:    sts_i.hpp, stsmatch_m.?pp (forward e-PCR)
+description:
+        - Support for overhang nucleotides in primers as masked characters
+
+version      2.2.3
+affected:    Makefiles
+description:
+	- Compiling under Mac OS X
+
+version      2.2.2
+affected:    API, re-PCR, e-PCR, commandline
+description:
+	- Better consistency for misalignments found and alignments shown
+
+version      2.2.1
+affected:    API, re-PCR, commandline
+description:
+	- New output for re-PCR is available (with alignments)
+
+version      2.2.0
+affected:    Building, API, data format, e-PCR, re-PCR, commandline
+description:
+	- API: Alignment now is performed by IAlign interface
+	- seqcmp class is obsolete
+	- Added new alignment method, more presize but slow (fixes bug)
+	- New output is available, with graphic representation of alignments
+
+version      2.1.0
+affected:    Building, API, data format, e-PCR, commandline
+description: 
+        - e-PCR, re-PCR: fixed bug, that forbidded overlapping primers
+        - e-PCR        : fixed `empty description is shown as to "?"'
+        - re-PCR       : hash file version 2, new build algorithm
+                         new "fahash" program generates hash files
+                         re-PCR is for lookup only
+
+
+version      2.0.5
+affected:    Building, e-PCR, famap, commandline
+description: All tools are working for windows. Fasta conversion is added.
+
+
+version      2.0.4
+affected:    Building
+description: Now compileable with Borlang C++ Builder 5.5 for win32
+
+
+version      2.0.3
+affected:    commandline parsing, API, defaults
+description: Changed defaults for M (Margin); now can be changed from 
+	     commandline
+
+
+version      2.0.2
+affected:    e-PCR commandline parsing
+description: Fixed commandline processing -- compat options are allowed
+	     anywhere
+
+
+version      2.0.1
+affected:    API
+description: independent report for left and right primer misalignments
+             in forward e-pcr API
+
+

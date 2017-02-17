@@ -1,0 +1,158 @@
+## $Id: Makefile.vc8,v 1.1 2007/07/05 16:06:04 rotmistr Exp $
+########################################################################
+##
+##                            PUBLIC DOMAIN NOTICE
+##               National Center for Biotechnology Information
+##
+##  This software/database is a "United States Government Work" under the
+##  terms of the United States Copyright Act.  It was written as part of
+##  the author's official duties as a United States Government employee and
+##  thus cannot be copyrighted.  This software/database is freely available
+##  to the public for use. The National Library of Medicine and the U.S.
+##  Government have not placed any restriction on its use or reproduction.
+##
+##  Although all reasonable efforts have been taken to ensure the accuracy
+##  and reliability of the software and data, the NLM and the U.S.
+##  Government do not and cannot warrant the performance or results that
+##  may be obtained by using this software or data. The NLM and the U.S.
+##  Government disclaim all warranties, express or implied, including
+##  warranties of performance, merchantability or fitness for any particular
+##  purpose.
+##
+##  Please cite the author in any work or product based on this material.
+##
+########################################################################
+
+srcdir = .
+!include $(srcdir)/stand/version.mk
+
+CC = cl -I../ -D_WIN32 -D_CONSOLE -DSTANDALONE -DUSE_WIN=1 -DVERSION=\"$(VERSION)\" -O2 /EHsc /GR
+LINK = cl
+
+.c.obj:
+	$(CC) -c $< -o $@ 
+
+.cpp.obj:
+	$(CC) -c $< -o $@ 
+
+C_FILES = \
+	getopt.c 
+
+SRC_FILES = \
+	faread.cpp \
+	fast_seqio_read.cpp \
+	fast_seqio_write.cpp \
+	hashset.cpp \
+	mmap.cpp \
+	align.cpp \
+	stsmatch_i.cpp \
+	stsmatch_m.cpp \
+	stsfilter.cpp \
+	stsmatch.cpp \
+	fahash_create.cpp \
+	fahash_create1.cpp \
+	fahash_create2.cpp \
+	fahash_lookup.cpp
+OBJ = $(SRC_FILES:.cpp=.obj) $(C_FILES:.c=.obj)
+HDR = defaults.h build_cfg.h \
+	bin-io.hpp \
+	strref.hpp \
+    mmap.hpp \
+	faread.hpp \
+	fast_seqio.hpp \
+	hashset.hpp \
+	sts_i.hpp \
+	align.hpp \
+	minilcs.hpp \
+	stsmatch_i.hpp \
+	stsmatch_m.hpp \
+	stsmatch.hpp \
+	fahash.hpp \
+	sts.hpp  \
+	mswin.h  
+
+all: includes objects e-PCR.exe famap.exe fahash.exe re-PCR.exe
+
+clean: 
+	-del *.obj
+	-del epcr/*
+	-rmdir epcr
+
+clean-all: clean 
+	-rm e-PCR.exe
+	-rm re-PCR.exe
+	-rm famap.exe
+	-rm fahash.exe
+
+e-PCR.exe: e-PCR_main.obj $(OBJ)
+	$(LINK) e-PCR_main.obj /Fee-PCR.exe /ML /link /SUBSYSTEM:CONSOLE $(OBJ)
+famap.exe: famap_main.obj $(OBJ)
+	$(LINK) famap_main.obj /Fefamap.exe /ML /link /SUBSYSTEM:CONSOLE $(OBJ)
+fahash.exe: fahash_main.obj $(OBJ)
+	$(LINK) fahash_main.obj /Fefahash.exe /ML /link /SUBSYSTEM:CONSOLE $(OBJ)
+re-PCR.exe: re-PCR_main.obj $(OBJ)
+	$(LINK) re-PCR_main.obj /Fere-PCR.exe /ML /link /SUBSYSTEM:CONSOLE $(OBJ)
+
+includes: $(HDR)
+
+objects: $(OBJ) 
+
+########################################################################
+## $Log: Makefile.vc8,v $
+## Revision 1.1  2007/07/05 16:06:04  rotmistr
+## Made things compileable by MS Visual C++ 8.0
+##
+## Revision 1.7  2004/09/03 21:28:56  rotmistr
+## Fixes to compile with Borland C++ 5.5
+##
+## Revision 1.6  2004/09/03 19:07:06  rotmistr
+## List of files changed
+##
+## Revision 1.5  2004/05/27 21:18:54  rotmistr
+## Changes from ../Changes v.2.1.0 added
+##
+## Revision 1.4  2004/04/02 15:44:01  rotmistr
+## *** empty log message ***
+##
+## Revision 1.3  2004/04/01 17:24:46  rotmistr
+## *** empty log message ***
+##
+## Revision 1.2  2004/04/01 16:37:54  rotmistr
+## Added getopt
+##
+## Revision 1.1  2004/04/01 05:59:11  rotmistr
+## Compilable with Bcc5.5/win32
+##
+## Revision 1.4  2004/03/30 21:06:58  rotmistr
+## Fixes for setting default STS size range.
+##
+## Revision 1.3  2004/02/04 21:23:46  rotmistr
+## - gcc-3.3.2 compatible
+## - better postfiltering for reverse-e-PCR for discontiguos words
+## - cgi added, that supports:
+##  -- contig to chromosome mapping
+##  -- simple mapviewer links
+##  -- unists links
+##  -- discontiguos words
+##
+## Revision 1.2  2004/01/28 23:27:09  rotmistr
+## "Best of overlapping" hit selection postprocessor added.
+##
+## Revision 1.1.1.1  2003/12/23 18:17:28  rotmistr
+## Package that includes e-PCR, reverse e-PCR, and sequence data preparation
+## program for reverse e-PCR looks ready
+##
+## Revision 1.5  2003/12/01 12:29:36  rotmistr
+## Reverse PCR wordhash builder in progress
+##
+## Revision 1.4  2003/11/21 23:26:36  rotmistr
+## Almost compilable
+##
+## Revision 1.3  2003/11/20 18:27:32  rotmistr
+## Sample files updated
+## Program does not crush
+##
+## Revision 1.2  2003/11/20 02:12:28  rotmistr
+## Fixed id, log tags and copyright notice
+##
+########################################################################

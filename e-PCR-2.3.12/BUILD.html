@@ -1,0 +1,331 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Electronic PCR commandline tools: build instructions</title>
+<meta name="
+            author
+          " content="Greg Schuler, NCBI
+              ;
+            Kirill Rotmistrovsky, NCBI
+              ;
+            ">
+<style>
+          body {
+          }
+          hr.section-sep {
+            width: 100% ;
+            noshade: noshade ;
+          }
+          div.subsection {
+            margin-left: 8px ;
+          }
+          div.subsubsection {
+            margin-left: 16px ;
+          }
+          div.section h2.title {
+            font-weight:  bold ;
+            font-size: 144% ; 
+          }
+          div.subsection h3.title { 
+            font-weight:  bold ;
+            font-size: 120% ; 
+          }
+          div.subsubsection h4.title { 
+            font-weight:  bold ;
+            font-size: 109% ; 
+          }
+          div.abstract {
+            font-style: italic ;
+          }
+          dt {
+            font-weight: bold ;
+          }
+          h1.title {
+            text-align: center ;
+            font-weight: bold ;
+            font-size: 180% ; }
+          }
+        </style>
+</head>
+<body bgcolor="#FFFFFF">
+<h1 class="title">Electronic PCR commandline tools: build instructions</h1>
+<p align="right">Version: 2.3.12</p>
+<ol>
+<li>
+<a href="#build">Build</a><ol>
+<li>
+<a href="#bld-unix">Unix/gcc instructions</a><ol>
+<li><a href="#bld-unix-args">Make arguments</a></li>
+<li><a href="#bld-unix-macosx">Mac OS/X with gcc</a></li>
+</ol>
+</li>
+<li><a href="#bld-bcc">Windows/BorlandC++ instructions</a></li>
+<li><a href="#bld-vc8">Windows/MS-VisualC++8.0 instructions</a></li>
+</ol>
+</li>
+<li>
+<a href="#files">Files</a><ol>
+<li><a href="#files-common">Sources common to forward and reverse e-PCR binaries</a></li>
+<li><a href="#files-forward">Forward e-PCR source files</a></li>
+<li><a href="#files-reverse">Reverse e-PCR source files</a></li>
+<li><a href="#files-extra">Extra files</a></li>
+<li><a href="#files-build">Build files</a></li>
+</ol>
+</li>
+</ol>
+    <div class="abstract">
+<hr class="section-sep">
+      Build e-PCR and reverse e-PCR (re-PCR, famap) binaries with GNU
+      make and GCC.
+    </div>
+
+    <hr class="setion-sep">
+<div class="section">
+<a name="build"></a><h2 class="title">Build</h2>
+      
+
+      <div class="subsection">
+<a name="bld-unix"></a><h3 class="title">Unix/gcc instructions</h3>
+	    
+	    <ol>
+<li>Unpack archive</li>
+<li>Edit stand/config.mk if nesessary</li>
+<li>run <u>gmake links depend all OPTIMIZE=6</u>
+</li>
+</ol>
+	
+		<div class="subsubsection">
+<a name="bld-unix-args"></a><h4 class="title">Make arguments</h4>
+		  
+		  <p>One can use following arguments to make:</p>
+		  <dl>
+<dt>OPTIMIZE=[0-9]</dt>
+<dd>to pass with -O argument to
+		    compiler (default is build debug version)</dd>
+<dt>srcdir={path-to-src}</dt>
+<dd>to set path to sources</dd>
+<dt>objdir={path-to-obj}</dt>
+<dd>to set path where to
+		    place .o</dd>
+<dt>tgtdir={target-path}</dt>
+<dd>to set path where to put
+		    targets (libepcr.a and executable files)</dd>
+</dl>
+		</div>
+
+		<div class="subsubsection">
+<a name="bld-unix-macosx"></a><h4 class="title">Mac OS/X with gcc</h4>
+		  
+		  <p>Use LF64LDFLAGS= LF64CCFLAGS=-DNATIVE_LARGEFILES (yes, 
+		    space after first "=") argument 
+		    with gmake since Mac OS/2 does not have (and does not need) *64 file
+		    functions and off64_t</p>
+		</div>
+      </div>
+
+      <div class="subsection">
+<a name="bld-bcc"></a><h3 class="title">Windows/BorlandC++ instructions</h3>
+		
+		<ol>
+<li>Unpack archive</li>
+<li>Edit stand/Makefile.bcc55-w32 if nesessary</li>
+<li>run <u>make all -f stand/Makefile.bcc55-w32</u>
+</li>
+</ol>
+	
+      </div>
+
+      <div class="subsection">
+<a name="bld-vc8"></a><h3 class="title">Windows/MS-VisualC++8.0 instructions</h3>
+		
+		<ol>
+<li>Unpack archive</li>
+<li>Edit stand/Makefile.vc8 if nesessary</li>
+<li>run <u>nmake all -f stand/Makefile.vc8</u>
+</li>
+</ol>
+	
+      </div>
+    </div>
+
+    <hr class="setion-sep">
+<div class="section">
+<a name="files"></a><h2 class="title">Files</h2>
+      
+
+      <p><u>e-PCR</u> package includes two tool sets: forward
+      e-PCR (e-PCR) and reverse e-PCR (re-PCR, fahash and famap). These
+      binaries share some source files, that are compiled as
+      <u>libepcr.a</u> library.</p> 
+
+      <p>Directory <u>stand/</u> contains makefiles to use
+      with GCC. Change <u>stand/config.mk</u> to update compiler
+      and compiling options. Makefiles should be OK for GNU
+      make.</p>
+
+      <div class="subsection">
+<a name="files-common"></a><h3 class="title">Sources common to forward and reverse e-PCR binaries</h3>
+	
+
+	<dl>
+<dt>build_cfg.h</dt>
+<dd>macroses that control compilation
+	  with/without <u>NCBI</u> toolkit</dd>
+<dt>defaults.h</dt>
+<dd>defaults for e-PCR program (used also in library)</dd>
+<dt>mswin.h</dt>
+<dd>windows compatibility defines and declarations</dd>
+<dt>native64.h</dt>
+<dd>native 64bit file access compatibility defines and declarations</dd>
+<dt>strref.hpp</dt>
+<dd>class for passing reference to string data</dd>
+<dt>sts_i.hpp</dt>
+<dd>generic STS interface class</dd>
+<dt>hashset.hpp</dt>
+<dd>hash calculating class
+	  declaration (allows set of discontiguos words)</dd>
+<dt>hashset.cpp</dt>
+<dd>hash calculating class
+	  implementation</dd>
+<dt>align.hpp</dt>
+<dd>align or compare two sequences allowing
+	  mismatches and gaps, declarations</dd>
+<dt>align.cpp</dt>
+<dd>align or compare two sequences allowing
+	  mismatches and gaps, implementation</dd>
+<dt>minilcs.hpp</dt>
+<dd>align two sequences templat class</dd>
+<dt>faread.hpp</dt>
+<dd>read fasta files, declarations</dd>
+<dt>faread.cpp</dt>
+<dd>read fasta files, implementation</dd>
+<dt>mmap.hpp</dt>
+<dd>mmap(2) wrapper for huge files and no
+	  page boundary restriction, declarations</dd>
+<dt>mmap.cpp</dt>
+<dd>mmap(2) wrapper for huge files and no
+	  page boundary restriction, implementation</dd>
+<dt>getopt.c</dt>
+<dd>getopt implementation -- to compile for
+          windows</dd>
+</dl>
+      </div>
+
+      <div class="subsection">
+<a name="files-forward"></a><h3 class="title">Forward e-PCR source files</h3>
+	
+	<dl>
+<dt>e-PCR_main.cpp</dt>
+<dd>main for e-PCR commandline program</dd>
+<dt>stsmatch_i.hpp</dt>
+<dd>STS lookup algorithm declarations</dd>
+<dt>stsmatch_i.cpp</dt>
+<dd>STS lookup algorithm implementation</dd>
+<dt>stsfilter.cpp</dt>
+<dd>Postprocessor for STS lookup</dd>
+<dt>stsmatch_m.hpp</dt>
+<dd>STS and STS hash table
+	  implementation for mmapable UniSTS file, declarations</dd>
+<dt>stsmatch_m.cpp</dt>
+<dd>STS and STS hash table
+	  implementation for mmapable UniSTS file, implementation</dd>
+<dt>stsmatch.hpp</dt>
+<dd>Some useful callbacks
+	  declarations</dd>
+<dt>stsmatch.cpp</dt>
+<dd>Some useful callbacks,
+	  implementation</dd>
+</dl>
+      </div>
+
+      <div class="subsection">
+<a name="files-reverse"></a><h3 class="title">Reverse e-PCR source files</h3>
+	
+	<dl>
+<dt>bin-io.hpp</dt>
+<dd>Generic read/write integers and strings</dd>
+<dt>fahash_defines.h</dt>
+<dd>Internal defines for fahash</dd>
+<dt>fahash_internal.hpp</dt>
+<dd>Internal defines for fahash</dd>
+<dt>fahash.hpp</dt>
+<dd>Hash sequence words in file, declarations</dd>
+<dt>fahash_create.cpp</dt>
+<dd>Hash sequence words in file,
+	  creating hash file, abstract</dd>
+<dt>fahash_create1.cpp</dt>
+<dd>Hash sequence words in file,
+	  creating hash file version 1 implementation</dd>
+<dt>fahash_create2.cpp</dt>
+<dd>Hash sequence words in file,
+	  creating hash file version 2 implementation</dd>
+<dt>fahash_lookup.cpp</dt>
+<dd>Hash sequence words in file,
+	  lookup algorithm implementation</dd>
+<dt>fast_seqio.hpp</dt>
+<dd>Fast access to regions of
+	  sequences, declarations</dd>
+<dt>fast_seqio_read.cpp</dt>
+<dd>Fast access to regions of
+	  sequences, implementation</dd>
+<dt>fast_seqio_write.cpp</dt>
+<dd>Fast access to regions of
+	  sequences, create sequence file implementation</dd>
+<dt>famap_main.cpp</dt>
+<dd>main for commandline tool to
+	  create/dump mmapable file</dd>
+<dt>fahash_main.cpp</dt>
+<dd>main for commandline tool to
+	  create hash file</dd>
+<dt>sts.hpp</dt>
+<dd>simple implementation for STS class</dd>
+<dt>re-PCR_main.cpp</dt>
+<dd>main for reverse e-PCR commandline tool</dd>
+</dl>
+      </div>
+
+
+      <div class="subsection">
+<a name="files-extra"></a><h3 class="title">Extra files</h3>
+	
+	<dl>
+<dt>seqcmp_main.cpp</dt>
+<dd>Main file for align.?pp
+	  test</dd>
+</dl>
+      </div>
+
+      <div class="subsection">
+<a name="files-build"></a><h3 class="title">Build files</h3>
+	
+	<dl>
+<dt>Makefile</dt>
+<dd>Master makefile</dd>
+<dt>stand/version.mk</dt>
+<dd>Version definitions</dd>
+<dt>stand/config.mk</dt>
+<dd>Compiler options</dd>
+<dt>stand/Makefile.libepcr</dt>
+<dd>libepcr makefile</dd>
+<dt>stand/Makefile.cmd_epcr</dt>
+<dd>e-PCR makefile</dd>
+<dt>stand/Makefile.cmd_repcr</dt>
+<dd>re-PCR makefile</dd>
+<dt>stand/Makefile.cmd_famap</dt>
+<dd>famap makefile</dd>
+<dt>stand/Makefile.cmd_fahash</dt>
+<dd>fahash makefile</dd>
+<dt>stand/Makefile.cmd_seqcmp</dt>
+<dd>seqcmp makefile</dd>
+<dt>stand/Makefile.bcc55-w32</dt>
+<dd>makefile for BorlandC++/win32</dd>
+<dt>stand/Makefile.vc8</dt>
+<dd>makefile for MS Visual C++ 8.0</dd>
+</dl>
+      </div>
+
+    </div>
+
+  <hr class="section-sep">
+</body>
+</html>

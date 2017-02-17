@@ -1,0 +1,688 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Electronic PCR commandline tools: operating instructions</title>
+<meta name="
+            author
+          " content="Greg Schuler, NCBI
+              ;
+            Kirill Rotmistrovsky, NCBI
+              ;
+            ">
+<style>
+          body {
+          }
+          hr.section-sep {
+            width: 100% ;
+            noshade: noshade ;
+          }
+          div.subsection {
+            margin-left: 8px ;
+          }
+          div.subsubsection {
+            margin-left: 16px ;
+          }
+          div.section h2.title {
+            font-weight:  bold ;
+            font-size: 144% ; 
+          }
+          div.subsection h3.title { 
+            font-weight:  bold ;
+            font-size: 120% ; 
+          }
+          div.subsubsection h4.title { 
+            font-weight:  bold ;
+            font-size: 109% ; 
+          }
+          div.abstract {
+            font-style: italic ;
+          }
+          dt {
+            font-weight: bold ;
+          }
+          h1.title {
+            text-align: center ;
+            font-weight: bold ;
+            font-size: 180% ; }
+          }
+        </style>
+</head>
+<body bgcolor="#FFFFFF">
+<h1 class="title">Electronic PCR commandline tools: operating instructions</h1>
+<p align="right">Version: 2.3.12</p>
+<ol>
+<li>
+<a href="#fwd">Forward e-PCR</a><ol>
+<li><a href="#fwd-example">Example</a></li>
+<li><a href="#fwd-synopsis">Synopsis</a></li>
+<li><a href="#fwd-description">Description</a></li>
+<li>
+<a href="#fwd-options">Options</a><ol>
+<li><a href="#fwd-options-general">General options</a></li>
+<li><a href="#fwd-options-hash">Hash building options</a></li>
+<li><a href="#fwd-options-hit">Hit quality options</a></li>
+<li><a href="#fwd-options-align">Alignment algorithms options</a></li>
+<li><a href="#fwd-options-report">Report options</a></li>
+</ol>
+</li>
+<li><a href="#fwd-output-fmt">Ouput formats</a></li>
+<li><a href="#fwd-exit">Exit codes</a></li>
+</ol>
+</li>
+<li>
+<a href="#rev">Reverse e-PCR</a><ol>
+<li><a href="#rev-example">Example</a></li>
+<li><a href="#rev-synopsis">Synopsis</a></li>
+<li><a href="#rev-description">Description</a></li>
+<li>
+<a href="#rev-options">Options</a><ol>
+<li><a href="#rev-options-common">Common options</a></li>
+<li><a href="#rev-options-famap">famap options</a></li>
+<li><a href="#rev-options-fahash">Fahash</a></li>
+<li><a href="#rev-options-cmd">Commands</a></li>
+<li><a href="#rev-options-search">Search options</a></li>
+</ol>
+</li>
+<li>
+<a href="#rev-fmt">Output format</a><ol>
+<li><a href="#rev-fmt-primer">For primer lookup</a></li>
+<li><a href="#rev-fmt-sts">For STS lookup</a></li>
+</ol>
+</li>
+<li><a href="#rev-exid">Exit codes</a></li>
+<li><a href="#rev-features">Bugs and features</a></li>
+</ol>
+</li>
+<li><a href="#formats">File formats</a></li>
+</ol>
+    <div class="abstract">
+<hr class="section-sep">
+      <p>Use <u>e-PCR</u> to map sequences using STS
+      database</p>
+      <p>Use <u>re-PCR</u> to map STSes or short primers in sequence
+      database</p>
+      <p>Use <u>famap</u> and <u>fahash</u> to prepare 
+      sequence database for <u>re-PCR</u> searches.</p>
+    </div>
+
+    <hr class="setion-sep">
+<div class="section">
+<a name="fwd"></a><h2 class="title">Forward e-PCR</h2>
+      
+
+      <div class="subsection">
+<a name="fwd-example"></a><h3 class="title">Example</h3>
+	
+	<pre>
+work&gt; e-PCR -w9 -f 1 -m100 mystsdb.sts D=100-400 myfastafile.fa N=1 G=1 T=3
+</pre>
+      </div>
+
+      <div class="subsection">
+<a name="fwd-synopsis"></a><h3 class="title">Synopsis</h3>
+	
+	<pre>
+
+e-PCR [-hV] [posix-options] stsfile [fasta ...] [compat-options]
+where posix-options are:
+	-m ##	Margin (default 50)
+	-w ##	Wordsize  (default 7)
+	-n ##	Max mismatches allowed (default 0)
+	-g ##	Max indels allowed (default 0)
+	-f ##	Use ## discontiguos words
+	-o ##	Set output file
+	-t ##	Set output format:
+		1 - classic, range (pos1..pos2)
+		2 - classic, midpoint
+		3 - tabular
+                4 - tabular with alignment in comments (slow)
+        -d ##-## Set default sts size 
+	-p +-	Turn hits postprocess on/off
+	-v +-	Verbose on/Off
+        -a a|f  Use presize alignmens (only if gaps&gt;0), slow
+                 a - Allways or f - as Fallback
+        -x +-   Use 5'-end lowercase masking of primers (default -)
+        -u +-   Uppercase all primers (default -)
+and compat-options (duplicate posix-options) are:
+	M=##	Margin (default 50)
+	W=##	Wordsize  (default 7)
+	N=##	Max mismatches allowed (default 0)
+	G=##	Max indels allowed (default 0)
+	F=##	Use ## discontinuos words
+	O=##	Set output file to ##
+	T=##	Set output format (1..4)
+        D=##-## Set default sts size 
+	P=+-	Postprocess hits on/off
+	V=+-	Verbose on/Off
+        A=a|f   Use presize alignmens (only if gaps&gt;0), slow
+                 a - Allways or f - as Fallback
+        X=+-    Use 5'-end lowercase masking of primers (default -)
+        U=+-    Uppercase all primers (default -)
+	-mid	Same as T=2
+
+</pre>
+      </div>
+
+      <div class="subsection">
+<a name="fwd-description"></a><h3 class="title">Description</h3>
+	
+	<p><u>e-PCR</u> parses stsfile in <u>unists
+	format</u>, then reads nucleotide sequence data in 
+        <u>FASTA</u> format from files listed in
+        commandline if any, or from stdin otherwise. For input
+        sequences e-PCR finds matches and prints output in one of
+        three formats.</p>
+      </div>
+
+      <div class="subsection">
+<a name="fwd-options"></a><h3 class="title">Options</h3>
+	
+	<p>Two sets of options are used: POSIX-compatible and
+	old-style provided for compatibility with previous versions of
+	e-PCR.</p>
+
+	<p>Posix-style options can appear only before first
+	parameter not starting with '-'. Argument '--' explicitely stops
+	parsing arguments as posix options.</p>
+	
+	<p>Compatibility options can appear anywhere in commandline.
+        '-mid' can appear anywhere and do not stop posix options
+        recognision.</p>
+
+	<div class="subsubsection">
+<a name="fwd-options-general"></a><h4 class="title">General options</h4>
+	  
+	  <dl>
+<dt>-V</dt>
+<dd>Print version, exit after parsing 
+              commandline</dd>
+<dt>-h</dt>
+<dd>Print help, exit after parsing 
+              commandline</dd>
+</dl>
+	</div>
+ 
+	<div class="subsubsection">
+<a name="fwd-options-hash"></a><h4 class="title">Hash building options</h4>
+	  
+	  <dl>
+<dt>-w wordsize | W=wordsize</dt>
+<dd>Set word size for
+	    primers hash (nucleotide positions). Longer word size decreases
+	    hash collision rate, but increases memory usage. Also no
+            mismatches are allowed within word size near "inner" boundary of
+	    primers unless one uses discontiguous words, and  no
+	    gaps are ever allowed in that region. </dd>
+<dt>-f wordcnt | W=wordcnt</dt>
+<dd>Set discontiguous word
+	    count for primers hash (1 means "use contiguous
+	    words"). Discontiguous words increase number of hash
+	    tables and decrease "effective" word size (thus increasing
+	    hash collision rate), so make search significantly slower,
+	    but increase sencitivity by allowing mismatches within
+	    word size. Reasonable values are 1 (contiguous words) 
+            and 3.</dd>
+<dt>-d lo-hi | D=lo-hi</dt>
+<dd>Set ddefault STS size
+	    range - values used for STSs that have no size associated
+	    in file.</dd>
+</dl>
+	</div>
+
+	<div class="subsubsection">
+<a name="fwd-options-hit"></a><h4 class="title">Hit quality options</h4>
+	  
+	  <dl>
+<dt>-m margin | M=margin</dt>
+<dd>Set maximal allowed
+	    deviation of hit product size from expected STS size.</dd>
+<dt>-n mism | N=mism</dt>
+<dd>Set maximal number of
+	    mismatches allowed in primer-to-sequence alignment 
+            (per primer!).</dd>
+<dt>-g mism | G=mism</dt>
+<dd>Set maximal number of
+	    gaps allowed in primer-to-sequence alignment (per primer!).</dd>
+</dl>
+	</div>
+
+	<div class="subsubsection">
+<a name="fwd-options-align"></a><h4 class="title">Alignment algorithms options</h4>
+	  
+	  <dl>
+<dt>-a a|f | A=a|f</dt>
+<dd>Use NW algorithm to align
+	    primers to sequence: a - always, f - as fallback if fast
+	    algorithm gives no hit at this position.</dd>
+<dt>-x +|- | X=+|-</dt>
+<dd>Turn on/off recognising of
+	    lowercase characters at 5'-ends of primers as nucleotides
+	    that don't need to be aligned to sequence (floppy tails).</dd>
+<dt>-u +|- | U=+|-</dt>
+<dd>Uppercase primers. To use
+	    with files prepared for ``-x=+'' mode, but requiring full
+	    primer alignment.</dd>
+</dl>
+          If STS file contains primers with lowercase charactars, you have
+          to use either -x+ or -u+ flag.
+	</div>
+
+	<div class="subsubsection">
+<a name="fwd-options-report"></a><h4 class="title">Report options</h4>
+	  
+	  <dl>
+<dt>-o output | O=output</dt>
+<dd>Set output file.</dd>
+<dt>-t 1|2|3|4 | T=1|2|3|4</dt>
+<dd>Set output format.</dd>
+<dt>-p +|- | P=+|-</dt>
+<dd>
+              Set hit grouping on/off: when using discontiguous words 
+              and gaps, some hits may be reported multiple times with
+              little different quality. This option controls reporting
+              only best hit of group of overlapping hits. Default
+              depends on F and G values.
+            </dd>
+<dt>-v +|- | V=+|-</dt>
+<dd>
+	      Report sequence ids to stderr on/off.
+            </dd>
+</dl>
+	</div>
+      </div>
+      <div class="subsection">
+<a name="fwd-output-fmt"></a><h3 class="title">Ouput formats</h3>
+	
+	<dl>
+<dt>1: Traditional: reports whitespace-separated</dt>
+<dd>
+            <ul>
+<li>Sequence FASTA identifier</li>
+<li>POS1..POS2 -- start and end positions of hit
+	      (includes length floppy tail)</li>
+<li>STS identifier (col. 1 from STS file)</li>
+<li>STS description (columns 5..last from STS file)</li>
+</ul>
+            <p>In this format product size equals to POS2-POS1+1</p>
+          </dd>
+<dt>2: Traditional midpoint: reports whitespace-separated</dt>
+<dd>
+            <ul>
+<li>Sequence FASTA identifier</li>
+<li>POS -- middle point position of hit</li>
+<li>STS identifier (col. 1 from STS file)</li>
+<li>STS description (columns 5..last from STS file)</li>
+</ul>
+          </dd>
+<dt>3: Tab-separated detailed</dt>
+<dd>
+            <ul>
+<li>Sequence FASTA identifier</li>
+<li>STS identifier (col. 1 from STS file)</li>
+<li>+|- -- strand of hit (order of primers in hit)</li>
+<li>POS1 -- start position of hit (does not include
+	      floppy tail if any)</li>
+<li>POS2 -- end position of hit (does not include
+	      floppy tail)</li>
+<li>SIZE/MIN..MAX -- observed size of hit/expected
+		size range of STS</li>
+<li>MISM -- Total number of mismatches for two primers</li>
+<li>GAPS -- Total number of gaps for two primers</li>
+<li>STS description (columns 5..last from STS file)</li>
+</ul>
+            <p>In this format product size may be greater then 
+              POS2-POS1+1 for probes with floppy tails</p>
+          </dd>
+<dt>4: Tab-separated detailed with alignment</dt>
+<dd>
+            Is same as format 3, but also containing visualisations of
+            alignments in comment lines (lines starting with ``#'')
+          </dd>
+</dl>
+      </div>
+
+      <div class="subsection">
+<a name="fwd-exit"></a><h3 class="title">Exit codes</h3>
+	
+	<p>Zero on success, nonzero on fail</p>
+      </div>
+    </div>
+
+    <hr class="setion-sep">
+<div class="section">
+<a name="rev"></a><h2 class="title">Reverse e-PCR</h2>
+      
+
+      <div class="subsection">
+<a name="rev-example"></a><h3 class="title">Example</h3>
+	
+	<pre>
+work&gt; famap -tN -b genome.famap org/chr_*.fa
+work&gt; fahash -b genome.hash -w 12 -f3 ${PWD}/genome.famap
+work&gt; re-PCR -s genome.hash -n1 -g1 ACTATTGATGATGA AGGTAGATGTTTTT 120-200
+</pre>
+      </div>
+
+      <div class="subsection">
+<a name="rev-synopsis"></a><h3 class="title">Synopsis</h3>
+	
+	<pre>
+
+famap [-hV]
+famap -b mmapped-file [-t cvt] [fasta-file ...]
+famap -d mmapped-file [ord ...]
+famap -l mmapped-file [ord ...]
+where cvt is one of: off n N nx NX
+
+fahash [-hV]
+fahash -b hash-file [build-options] mmapped-file ...
+fahash -T hash-file [-o output]
+
+where:
+	-b hash-file	Build hash tables (hash-file) from sequence files,
+	-T hash-file	Print word usage statistics for hash-file
+	-o outfile   	Set output file name for -T
+
+build-options:
+	-w wordsize 	Set word size when building hash tables
+	-f period   	Set discontiguity when building hash tables
+	-k          	Skip repeats when building indexfile
+	-F min,max  	Set watermarks for fragment size (in Mb) for -v1
+        -v 1|2          Build file of format version 1 or 2
+        -c cachesize    Use cache size cachesize (for -v2)
+
+re-PCR [-hV]
+re-PCR -p hash-file [-g gaps] [-n mism] [primer ...]
+re-PCR -P hash-file [-g gaps] [-n mism] [primer-file ...]
+re-PCR -s hash-file [search-options] [-O output] [left right lo hi [...]]
+re-PCR -S hash-file [search-options] [-O output] [-C bcnt] [stsfile ...]
+
+where:
+	-p hash-file	Perform primer lookup using hash-file
+	-P hash-file	Perform primer lookup using hash-file
+	-s hash-file	Perform STS lookup using hash-file, STSs in cmdline
+	-S hash-file	Perform STS lookup using hash-file, STSs in file
+
+
+search-options:
+	-n mism      	Set max allowed mismatches per primer for lookup
+	-g gaps      	Set max allowed indels per primer for lookup
+	-m margin    	Set variability for STS size for lookup
+        -d min-max      Set default STS size (for STSs without size set)
+	-r +|-       	Enable/disable reverse STS lookup
+	-O +|-       	Enable/disable syscall optimisation
+
+	-C batchcnt  	Set number of STSes per batch
+	-o outfile   	Set output file name
+
+</pre>
+      </div>
+      
+      <div class="subsection">
+<a name="rev-description"></a><h3 class="title">Description</h3>
+	
+	<p><u>Reverse e-PCR</u> (re-PCR) performs STS or
+	primer lookup against sequence database. Two files are
+	required for database: mmapped-file with sequence data in fast
+	random-accessible format and hash-file, that keeps
+	precalculated positions of all words of sequence
+	database</p>
+
+	<p>Use <u>famap</u> to build mmapped-file from FASTA
+	files.</p>
+
+	<p>Use <u>fahash</u> to build hash-file, and output
+	word usage statistics.</p>
+        
+        <p>Use re-PCR to perform STS and primer searches.</p> 
+
+	<p>Discontiguous words are supported by re-PCR as well as
+	contiguous.</p>
+      </div>
+
+      <div class="subsection">
+<a name="rev-options"></a><h3 class="title">Options</h3>
+	
+
+	<div class="subsubsection">
+<a name="rev-options-common"></a><h4 class="title">Common options</h4>
+	  
+	  <dl>
+<dt>-V</dt>
+<dd>Print version, exit after parsing 
+              commandline</dd>
+<dt>-h</dt>
+<dd>Print help, exit after parsing 
+              commandline</dd>
+</dl>
+	</div>
+	
+	<div class="subsubsection">
+<a name="rev-options-famap"></a><h4 class="title">famap options</h4>
+	  
+	  <dl>
+<dt>-b mmapped-file</dt>
+<dd>Build famap-file from input fasta
+	    file(s). If no fasta files are set in commandline, use
+	    stdin as input.</dd>
+<dt>-d mmapped-file</dt>
+<dd>Dump famap-file contents in
+	    fasta format. If ord number(s) are set, print only
+	    sequences with given ordinals.</dd>
+<dt>-l mmapped-file</dt>
+<dd>List fama-file sequence
+	    identifiers. If ord number(s) are set, print only
+	    sequences with given ordinals.</dd>
+<dt>-t cvt-table</dt>
+<dd>Use compiled-in table to
+	    convert input.<dl>
+<dt>n</dt>
+<dd>Nucleotides. Allowed characters are
+		[actgACTGnN]. Other letters are converted to n or N.
+		Rest of symbols are ignored. Case is preserved.</dd>
+<dt>nx</dt>
+<dd>Nucleotides with extended ambiquity
+		codes iupac_na, lowercase are allowed. Other letters 
+                are converted to n or N.
+		Rest of symbols are ignored. Case is preserved.</dd>
+<dt>N</dt>
+<dd>Nucleotides. Allowed characters are
+		[ACTGN]. [actgn] are converted to uppercase.
+                Other letters are converted to N.
+		Rest of symbols are ignored.</dd>
+<dt>NX</dt>
+<dd>Nucleotides with extended ambiquity
+		codes iupac_na, lowercase are converted to uppercase. 
+                Other letters are converted to N.
+		Rest of symbols are ignored.</dd>
+</dl>
+</dd>
+</dl>
+	</div>
+	
+	<div class="subsubsection">
+<a name="rev-options-fahash"></a><h4 class="title">Fahash</h4>
+	  
+	  <dl>
+<dt>-b hash-file</dt>
+<dd>Build hash-file for
+	    mmapped-file(s).</dd>
+<dt>-T hash-file</dt>
+<dd>Dump word usage statustics for
+	    hash-file.</dd>
+<dt>-v version</dt>
+<dd>Build hash-file of version 1 or 2
+	    (2 is default).</dd>
+<dt>-w wordsize</dt>
+<dd>Build hash-file for word
+	    <u>wordsize</u> nucleotides long.</dd>
+<dt>-f wordcnt</dt>
+<dd>Build hash-file for
+	    <u>wordcnt</u> discontiguous words. 1 stands for
+	    contiguous words.</dd>
+<dt>-F min,max</dt>
+<dd>Use memory watermarks (Mbytes)
+	    for hash table size (for -v 1).</dd>
+<dt>-c cachesize</dt>
+<dd>Set cache size for -v 2.</dd>
+<dt>-o output-file</dt>
+<dd>Use output-file for output
+	    result of -T.</dd>
+</dl>
+	</div>
+
+
+	<div class="subsubsection">
+<a name="rev-options-cmd"></a><h4 class="title">Commands</h4>
+	  
+	  <dl>
+<dt>-p hash-file</dt>
+<dd>Perform lookup for primers
+	    given in commandline.</dd>
+<dt>-s hash-file</dt>
+<dd>Perform lookup for STSes
+	    given in commandline.</dd>
+<dt>-S hash-file</dt>
+<dd>Perform lookup for STSes
+	    taken from unists file(s) given in commandline.</dd>
+</dl>
+	</div>
+
+	<div class="subsubsection">
+<a name="rev-options-search"></a><h4 class="title">Search options</h4>
+	  
+	  <dl>
+<dt>-n mism</dt>
+<dd>Number of mismatches allowed per
+	    primer.</dd>
+<dt>-g gaps</dt>
+<dd>Number of gaps allowed per
+	    primer.</dd>
+<dt>-m margin</dt>
+<dd>Maximal deviation of observed
+	    product size to expected STS size.</dd>
+<dt>-d lo-hi</dt>
+<dd>Set ddefault STS size
+	    range - values used for STSs that have no size associated
+	    in file.</dd>
+<dt>-r +|-</dt>
+<dd>Enable|disable flipped STS lookup
+	    (default is "enabled").</dd>
+<dt>-O +|-</dt>
+<dd>Enable|disable syscall optimisation.
+	    Since lookup is i/o expensive, enabling this parameter may
+	    improve search performance diskwise. On the other hand, it
+	    takes significantly more memory and CPU.</dd>
+<dt>-C batchcount</dt>
+<dd>How many STSs from input file
+	    to look at one pass. May effect on performance, especialy
+	    when used with -O +.</dd>
+<dt>-o output-file</dt>
+<dd>Use output-file for output.</dd>
+</dl>
+	</div>
+      </div>
+
+      <div class="subsection">
+<a name="rev-fmt"></a><h3 class="title">Output format</h3>
+	
+	<p>Is tab-separated file with following fields:</p>
+	<div class="subsubsection">
+<a name="rev-fmt-primer"></a><h4 class="title">For primer lookup</h4>
+	  
+	  <ul>
+<li>Primer ID</li>
+<li>Sequence ID</li>
+<li>Strand</li>
+<li>Hit start</li>
+<li>Hit end</li>
+<li>Mismatches</li>
+<li>Gaps</li>
+<li>Size</li>
+</ul>
+	</div>
+
+	<div class="subsubsection">
+<a name="rev-fmt-sts"></a><h4 class="title">For STS lookup</h4>
+	  
+	  <ul>
+<li>STS ID</li>
+<li>Sequence ID</li>
+<li>Strand</li>
+<li>Hit start</li>
+<li>Hit end</li>
+<li>Mismatches</li>
+<li>Gaps</li>
+<li>Observed Size/Expected size range</li>
+</ul>
+	</div>
+      </div>
+
+      <div class="subsection">
+<a name="rev-exid"></a><h3 class="title">Exit codes</h3>
+	
+	<p>Zero on success, non-zero on errors</p>
+      </div>
+
+      <div class="subsection">
+<a name="rev-features"></a><h3 class="title">Bugs and features</h3>
+	
+	<ul>
+<li>Mmapped-file path is hardcoded to hash-file as it is
+	  in commandline when hash-file is being built, which means
+	  that when one performs searches mmapped-file should be
+	  accessible with same name from current directory, as it is
+	  hardcoded.</li>
+<li>Mmapped-file is a proprietary format, that could be
+	  substituted with megablast database format, but is not
+	  (yet?) for performance reasons.</li>
+<li>If sequence sizes are large, it may be tricky to
+	  create database with discontiguous words because of memory
+	  usage requirements. Changing parameter -F (for -v 1) or -c
+	  (for -v 2) may help.</li>
+</ul>
+      </div>
+    </div>
+
+    <hr class="setion-sep">
+<div class="section">
+<a name="formats"></a><h2 class="title">File formats</h2>
+      
+      <dl>
+<dt>STS database</dt>
+<dd>Is single-tab (i.e. two tabs in a
+	row mean "empty field") separated file with following
+	fields:<ul>
+<li>STS id (required).</li>
+<li>First (left) primer (required).</li>
+<li>Second (right) primer (required).</li>
+<li>Product size (optional): can be number for strict
+	    size, or two numbers separated by dash for size
+	    range.</li>
+<li>Additional info, that can be used by applications 
+            (optional).</li>
+</ul>
+        Primers should be in iupac_na encoding, everything that is not
+        ACTG or actg is translated to N or n. Primers sequences should
+        be uppercase,
+        unless you want to use file with e-PCR -x+ flag - then several
+        first nucleotides of primers may be lowercase-masked. If
+        primers are not fully uppercase and you don't use -x+ flag,
+        you have to use -u+ flag with e-PCR.
+        </dd>
+</dl>
+      <dl>
+<dt>Primers file</dt>
+<dd>Is single-tab (i.e. two tabs in a
+	row mean "empty field") separated file with following
+	fields:<ul>
+<li>Primer id (required).</li>
+<li>Primer sequence.</li>
+</ul>
+        </dd>
+</dl>
+    </div>
+
+  <hr class="section-sep">
+</body>
+</html>

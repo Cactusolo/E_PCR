@@ -1,0 +1,238 @@
+
+             Electronic PCR commandline tools: build instructions
+
+                                                          Version: 2.3.12
+     _________________________________________________________________
+
+   Build e-PCR and reverse e-PCR (re-PCR, famap) binaries with GNU make
+   and GCC.
+     _________________________________________________________________
+
+Build
+
+Unix/gcc instructions
+
+    1. Unpack archive
+    2. Edit stand/config.mk if nesessary
+    3. run gmake links depend all OPTIMIZE=6
+
+Make arguments
+
+   One can use following arguments to make:
+
+   OPTIMIZE=[0-9]
+          to pass with -O argument to compiler (default is build debug
+          version)
+
+   srcdir={path-to-src}
+          to set path to sources
+
+   objdir={path-to-obj}
+          to set path where to place .o
+
+   tgtdir={target-path}
+          to set path where to put targets (libepcr.a and executable
+          files)
+
+Mac OS/X with gcc
+
+   Use LF64LDFLAGS= LF64CCFLAGS=-DNATIVE_LARGEFILES (yes, space after
+   first "=") argument with gmake since Mac OS/2 does not have (and does
+   not need) *64 file functions and off64_t
+
+Windows/BorlandC++ instructions
+
+    1. Unpack archive
+    2. Edit stand/Makefile.bcc55-w32 if nesessary
+    3. run make all -f stand/Makefile.bcc55-w32
+
+Windows/MS-VisualC++8.0 instructions
+
+    1. Unpack archive
+    2. Edit stand/Makefile.vc8 if nesessary
+    3. run nmake all -f stand/Makefile.vc8
+     _________________________________________________________________
+
+Files
+
+   e-PCR package includes two tool sets: forward e-PCR (e-PCR) and
+   reverse e-PCR (re-PCR, fahash and famap). These binaries share some
+   source files, that are compiled as libepcr.a library.
+
+   Directory stand/ contains makefiles to use with GCC. Change
+   stand/config.mk to update compiler and compiling options. Makefiles
+   should be OK for GNU make.
+
+Sources common to forward and reverse e-PCR binaries
+
+   build_cfg.h
+          macroses that control compilation with/without NCBI toolkit
+
+   defaults.h
+          defaults for e-PCR program (used also in library)
+
+   mswin.h
+          windows compatibility defines and declarations
+
+   native64.h
+          native 64bit file access compatibility defines and declarations
+
+   strref.hpp
+          class for passing reference to string data
+
+   sts_i.hpp
+          generic STS interface class
+
+   hashset.hpp
+          hash calculating class declaration (allows set of discontiguos
+          words)
+
+   hashset.cpp
+          hash calculating class implementation
+
+   align.hpp
+          align or compare two sequences allowing mismatches and gaps,
+          declarations
+
+   align.cpp
+          align or compare two sequences allowing mismatches and gaps,
+          implementation
+
+   minilcs.hpp
+          align two sequences templat class
+
+   faread.hpp
+          read fasta files, declarations
+
+   faread.cpp
+          read fasta files, implementation
+
+   mmap.hpp
+          mmap(2) wrapper for huge files and no page boundary
+          restriction, declarations
+
+   mmap.cpp
+          mmap(2) wrapper for huge files and no page boundary
+          restriction, implementation
+
+   getopt.c
+          getopt implementation -- to compile for windows
+
+Forward e-PCR source files
+
+   e-PCR_main.cpp
+          main for e-PCR commandline program
+
+   stsmatch_i.hpp
+          STS lookup algorithm declarations
+
+   stsmatch_i.cpp
+          STS lookup algorithm implementation
+
+   stsfilter.cpp
+          Postprocessor for STS lookup
+
+   stsmatch_m.hpp
+          STS and STS hash table implementation for mmapable UniSTS file,
+          declarations
+
+   stsmatch_m.cpp
+          STS and STS hash table implementation for mmapable UniSTS file,
+          implementation
+
+   stsmatch.hpp
+          Some useful callbacks declarations
+
+   stsmatch.cpp
+          Some useful callbacks, implementation
+
+Reverse e-PCR source files
+
+   bin-io.hpp
+          Generic read/write integers and strings
+
+   fahash_defines.h
+          Internal defines for fahash
+
+   fahash_internal.hpp
+          Internal defines for fahash
+
+   fahash.hpp
+          Hash sequence words in file, declarations
+
+   fahash_create.cpp
+          Hash sequence words in file, creating hash file, abstract
+
+   fahash_create1.cpp
+          Hash sequence words in file, creating hash file version 1
+          implementation
+
+   fahash_create2.cpp
+          Hash sequence words in file, creating hash file version 2
+          implementation
+
+   fahash_lookup.cpp
+          Hash sequence words in file, lookup algorithm implementation
+
+   fast_seqio.hpp
+          Fast access to regions of sequences, declarations
+
+   fast_seqio_read.cpp
+          Fast access to regions of sequences, implementation
+
+   fast_seqio_write.cpp
+          Fast access to regions of sequences, create sequence file
+          implementation
+
+   famap_main.cpp
+          main for commandline tool to create/dump mmapable file
+
+   fahash_main.cpp
+          main for commandline tool to create hash file
+
+   sts.hpp
+          simple implementation for STS class
+
+   re-PCR_main.cpp
+          main for reverse e-PCR commandline tool
+
+Extra files
+
+   seqcmp_main.cpp
+          Main file for align.?pp test
+
+Build files
+
+   Makefile
+          Master makefile
+
+   stand/version.mk
+          Version definitions
+
+   stand/config.mk
+          Compiler options
+
+   stand/Makefile.libepcr
+          libepcr makefile
+
+   stand/Makefile.cmd_epcr
+          e-PCR makefile
+
+   stand/Makefile.cmd_repcr
+          re-PCR makefile
+
+   stand/Makefile.cmd_famap
+          famap makefile
+
+   stand/Makefile.cmd_fahash
+          fahash makefile
+
+   stand/Makefile.cmd_seqcmp
+          seqcmp makefile
+
+   stand/Makefile.bcc55-w32
+          makefile for BorlandC++/win32
+
+   stand/Makefile.vc8
+          makefile for MS Visual C++ 8.0
+     _________________________________________________________________
